@@ -5,6 +5,7 @@ from styles.styles import (
     SIDENAV_MIN_WIDTH,
     _FANCY_TEXT_GRADIENT,
     DEFAULT_MENU_STYLE,
+    CYBERPUNK_HACKER_STYLE,
 )
 
 
@@ -42,6 +43,7 @@ def sidenav(current_page: str):
         style=me.Style(
             width=SIDENAV_MAX_WIDTH if app_state.sidenav_open else SIDENAV_MIN_WIDTH,
             background=me.theme_var("secondary-container"),
+            transition="width 0.3s ease",
         ),
     ):
         with me.box(

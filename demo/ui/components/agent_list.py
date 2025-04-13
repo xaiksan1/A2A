@@ -47,6 +47,16 @@ def agents_list(
           display="flex",
           justify_content="space-between",
           flex_direction="column",
+          background="black",
+          color="lime",
+          font_family="Courier New",
+          font_size="16px",
+          box_shadow="0 0 10px lime",
+          border="1px solid lime",
+          border_radius="5px",
+          padding="10px",
+          margin="10px",
+          transition="all 0.3s ease",
       )
   ):
     me.table(
@@ -68,6 +78,11 @@ def agents_list(
             gap=5,
             align_items="center",
             margin=me.Margin(top=10),
+            transition="transform 0.3s ease, background-color 0.3s ease",
+            ":hover": {
+                "transform": "scale(1.05)",
+                "background-color": "#00ff00",
+            },
         ),
     ):
       me.icon(icon="upload")
