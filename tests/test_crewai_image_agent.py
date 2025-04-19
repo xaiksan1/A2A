@@ -43,11 +43,12 @@ def mock_genai_client(mocker):
   mock_content.parts = [mock_part_image]
   mock_candidate.content = mock_content
   mock_response.candidates = [mock_candidate]
-
-  mock_models.generate_content.return_value = mock_response
-  mock_client_instance.models = mock_models
-
-  mock_genai_class = mocker.patch("agents.crewai.agent.genai.Client")
+  
+  mock_genai_class = mocker.patch("agents.crewai.agent.genai.GenerativeModel")
+  
+  mock_genai_class.return_value.generate_content.return_value = mock_response
+  
+  
   mock_genai_class.return_value = mock_client_instance
 
   return {
@@ -132,10 +133,10 @@ def test_generate_image_tool_success_new_image(
   mock_genai_client["client_class"].assert_called_once_with(
       api_key="test_api_key"
   )
-  mock_genai_client["models"].generate_content.assert_called_once()
+  mock_genai_client["client_class"].return_value.generate_content.assert_called_once()
   call_args, call_kwargs = mock_genai_client[
-      "models"
-  ].generate_content.call_args
+      "client_class"
+  ].return_value.generate_content.call_args
   assert call_kwargs["model"] == "gemini-2.0-flash-exp-image-generation"
   expected_contents = (
       prompt,
@@ -188,11 +189,11 @@ def test_generate_image_tool_success_with_ref_image(
   assert result_id == test_uuid_new.hex
   mock_loader.assert_called_once_with(ref_image_bytes_b64)
   mock_pil_image["open"].assert_called_once()
-  mock_genai_client["models"].generate_content.assert_called_once()
+  mock_genai_client["client_class"].return_value.generate_content.assert_called_once()
 
   call_args, call_kwargs = mock_genai_client[
-      "models"
-  ].generate_content.call_args
+      "client_class"
+  ].return_value.generate_content.call_args
   expected_text_input = (
       prompt,
       "Ignore any input images if they do not match the request.",

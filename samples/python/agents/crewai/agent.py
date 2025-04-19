@@ -16,10 +16,9 @@ from crewai import Agent, Crew, LLM, Task
 from crewai.process import Process
 from crewai.tools import tool
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 import logging
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
@@ -46,15 +45,18 @@ def get_api_key() -> str:
   load_dotenv()
   return os.getenv("GOOGLE_API_KEY")
 
-
 @tool("ImageGenerationTool")
 def generate_image_tool(prompt: str, session_id: str, artifact_file_id: str = None) -> str:
   """Image generation tool that generates images or modifies a given image based on a prompt."""
 
+  if not get_api_key():
+      raise Exception("API key is not set")
+
   if not prompt:
     raise ValueError("Prompt cannot be empty")
+  
 
-  client = genai.Client(api_key=get_api_key())
+
   cache = InMemoryCache()
 
   text_input = (
@@ -81,13 +83,14 @@ def generate_image_tool(prompt: str, session_id: str, artifact_file_id: str = No
         logger.info(f"Found reference image in prompt input")
       except Exception as e:
         ref_image_data = None
-    if not ref_image_data:
+    if session_image_data and not ref_image_data:
       # Insertion order is maintained from python 3.7
       latest_image_key = list(session_image_data.keys())[-1]
       ref_image_data = session_image_data[latest_image_key]
-
-    ref_bytes = base64.b64decode(ref_image_data.bytes)
-    ref_image = Image.open(BytesIO(ref_bytes))
+    
+    if ref_image_data:
+      ref_bytes = base64.b64decode(ref_image_data.bytes)
+      ref_image = Image.open(BytesIO(ref_bytes))
   except Exception as e:
     ref_image = None
 
@@ -96,16 +99,15 @@ def generate_image_tool(prompt: str, session_id: str, artifact_file_id: str = No
   else:
     contents = text_input
 
+  genai.configure(api_key=get_api_key())
+  model = genai.GenerativeModel(model_name="gemini-pro-vision")
   try:
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-exp-image-generation",
-        contents=contents,
-        config=types.GenerateContentConfig(response_modalities=["Text", "Image"]),
-    )
+    response = model.generate_content(contents=contents)
+
   except Exception as e:
     logger.error(f"Error generating image {e}")
     print(f"Exception {e}")
-    return -999999999
+    return -99999999
 
   for part in response.candidates[0].content.parts:
     if part.inline_data is not None:
@@ -128,7 +130,8 @@ def generate_image_tool(prompt: str, session_id: str, artifact_file_id: str = No
       except Exception as e:
         logger.error(f"Error unpacking image {e}")
         print(f"Exception {e}")
-  return -999999999
+        raise Exception("Could not extract image")
+  return -99999998
 
 
 class ImageGenerationAgent:

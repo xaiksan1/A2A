@@ -1,0 +1,34 @@
+# .idx/config.txt
+# This file stores user-defined rules and preferences for the development environment.
+# It includes settings for package preferences, left-shift behaviors, and any other actions to be performed on each task.
+
+# Package Preferences
+# Specify preferred package managers or versions here.
+# Example: Prefer using bun over npm
+package_manager = "bun"
+linter = "trunk"
+
+# Left-Shift Behaviors
+# Define actions to be performed automatically during each task.
+# Example: Run linting and formatting on each task.
+on_task = [
+    "bun run lint",
+    "bun run format",
+]
+
+# Additional Environment Settings
+# Customize other aspects of the environment, like preferred text editors or default settings.
+# Example: Default text editor
+default_editor = "vscode"
+
+# User Preferences
+# Define the user's development preferences for various tools and services.
+user_preferences = {
+  preferred_language = "TypeScript"
+  preferred_framework = "Next.js"
+  preferred_deployment_targets = ["Vercel", "StackBlitz", "Netlify", "Astro"]
+  api_key_preference = {
+    "Gemini" = "use for all API calls"
+  }
+  preferred_ide = "VSCode"
+}
