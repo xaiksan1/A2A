@@ -6,6 +6,29 @@ from state.state import AppState
 from state.agent_state import AgentState
 from common.types import AgentCard
 
+from demo.ui.styles import styles
+
+@me.component
+    def my_agent_component():
+    with me.box(style=styles.AGENT_BOX_STYLE):
+        me.text("Agent Name")
+
+@me.component
+    def my_app():
+    with me.box(style=styles.PAGE_BACKGROUND_STYLE):
+            #rest of the code
+
+@me.component
+def my_app():
+    with me.box(style=styles.PAGE_BACKGROUND_PADDING_STYLE):
+            #rest of the code
+
+
+@me.component
+def my_task_component():
+    with me.box(style=styles.TASK_BOX_STYLE):
+        me.text("Task Description")
+
 @me.component
 def agents_list(
     agents: list[AgentCard],

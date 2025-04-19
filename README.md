@@ -1,5 +1,21 @@
 ![image info](images/A2A_banner.png)
 
+
+## NumPy Issue Troubleshooting
+
+During the process of running the unit tests, we encountered an `ImportError` related to `numpy` and `libstdc++.so.6`. The error message is: `ImportError: libstdc++.so.6: cannot open shared object file: No such file or directory`. This error indicates that the `numpy` package is looking for a specific C++ standard library that is either missing or not in the library path where it's expected. This is a system-level dependency issue and might require modifying the environment outside the Python virtual environment. The same error happens within nix shell, this means that the error is related to how `numpy` is built or linked within this particular environment and might require a more tailored configuration of the `nix-shell`.
+
+Here are the steps we have taken so far to solve the issue:
+
+1.  We first tried running the test. The tests failed to run because of `ModuleNotFoundError` errors. This indicates that the test files are unable to locate the necessary modules.
+2.  We then tried to add the `samples/python` directory to the `PYTHONPATH` environment variable so that Python can locate the modules correctly. The tests failed again with an `ImportError` related to `numpy` and `libstdc++.so.6`.
+3.  We then reinstalled the `numpy` package, but the error persisted.
+4.  We then updated the shared library cache, but this also did not solve the issue.
+5.  We then tried installing `libstdc++.so.6` in the system, but the error persisted.
+6.  We then tried to use `nix-shell` to enter a development shell with all the dependencies specified in `shell.nix` and we ran the tests from within that shell. The error persisted.
+7.  We then removed the existing virtual environment, and all the packages installed there. Then, we tried to reinstall the python packages from within nix-shell. The error persisted.
+
+We need to investigate the nix file further and ask for help to solve this problem.
 **_An open protocol enabling communication and interoperability between opaque agentic applications._**
 
 <!-- TOC -->

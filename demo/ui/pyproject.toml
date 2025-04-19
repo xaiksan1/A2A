@@ -5,17 +5,17 @@ description = "Agent2Agent example UI"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "asyncio>=3.4.3",
-    "httpx>=0.28.1",
-    "httpx-sse>=0.4.0",
-    "pydantic>=2.10.6",
-    "fastapi>=0.115.0",
-    "uvicorn>=0.34.0",
-    "mesop>=1.0.0",
-    "a2a-samples",
-    "pandas>=2.2.0",
-    "google-genai>=1.9.0",
-    "google-adk>=0.0.3",
+  "asyncio>=3.4.3",
+  "httpx>=0.28.1",
+  "httpx-sse>=0.4.0",
+  "pydantic>=2.10.6",
+  "fastapi>=0.115.0",
+  "uvicorn>=0.34.0",
+  "mesop>=1.0.0",
+  "a2a-samples",
+  "pandas>=2.2.0",
+  "google-genai>=1.9.0",
+  "google-adk>=0.0.3",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -30,6 +30,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-dev = [
-    "ruff>=0.11.2",
-]
+dev = ["ruff>=0.11.2"]
